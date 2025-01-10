@@ -101,6 +101,7 @@ async function setupViewer(){
     let nightMode = false
     let firstLooad = true
     let ringModel = 1
+    let colorLerpValue3 = {x: 0}
 
     // Add WEBGi plugins
     await viewer.addPlugin(GBufferPlugin)
@@ -201,13 +202,23 @@ async function setupViewer(){
         const introTL = gsap.timeline()
         introTL
         .to('.loader', {x: '100%', duration: 0.8, ease: "power4.inOut", delay: 1})
-        .fromTo(position, {x: isMobile ? 3 : 3, y: isMobile ? -0.8 : -0.8, z: isMobile ? 1.2 : 1.2}, {x: isMobile ? 1.28 : 1.28, y: isMobile ? -1.7 : -1.7, z: isMobile ? 5.86 : 5.86, duration: 4, onUpdate}, '-=0.8')
-        .fromTo(target, {x: isMobile ? 2.5 : 2.5, y: isMobile ? -0.07 : -0.07, z: isMobile ? -0.1 : -0.1}, {x: isMobile ? -0.21 : 0.91, y: isMobile ? 0.03 : 0.03, z: isMobile ? -0.25 : -0.25, duration: 4, onUpdate}, '-=4')
+        .fromTo(position, 
+            { x: isMobile ? 3 : 3, y: isMobile ? -0.6 : -0.6, z: isMobile ? 1.2 : 1.2 }, 
+            { x: isMobile ? 1.28 : 1.28, y: isMobile ? -1.5 : -1.5, z: isMobile ? 5.86 : 5.86 }
+          )
+          .fromTo(target, 
+            { x: isMobile ? 2.5 : 2.5, y: isMobile ? 0.03 : 0.03, z: isMobile ? -0.1 : -0.1 }, 
+            { x: isMobile ? -0.21 : 0.91, y: isMobile ? 0.1 : 0.1, z: isMobile ? -0.25 : -0.25 }
+          )
         .fromTo('.header--container', {opacity: 0, y: '-100%'}, {opacity: 1, y: '0%', ease: "power1.inOut", duration: 0.8}, '-=1')
         .fromTo('.hero--scroller', {opacity: 0, y: '150%'}, {opacity: 1, y: '0%', ease: "power4.inOut", duration: 1}, '-=1')
         .fromTo('.hero--container', {opacity: 0, x: '100%'}, {opacity: 1, x: '0%', ease: "power4.inOut", duration: 1.8, onComplete: setupScrollAnimation}, '-=1')
         .fromTo('.side-bar', { opacity: 0, x: '50%' }, { opacity: 1, x: '0%', ease: "power4.inOut", duration: 2 }, '-=1')
         .to('.side-bar .unique', { opacity: 1, scale: 1.5, ease: "power4.inOut", duration: 2}, '-=1')
+        .fromTo(position, 
+            { y: position.y }, 
+            { y: position.y - 0.5, duration: 2, ease: "power1.inOut" }, '+=0');  // Adjust position here
+
     }
 
     function setupScrollAnimation(){
@@ -261,11 +272,11 @@ async function setupViewer(){
 
 
         // // EMOTIONS SECTION
-        .to(position,  {x: -0.06, y: -1.15, z: 4.42,
+        .to(position,  {x: -1.83, y: -0.14, z: 6.15,
             scrollTrigger: { trigger: ".cam-view-3",  start: "top bottom", end: "top top", scrub: true, immediateRender: false,
         }, onUpdate
         })
-        .to(target, {x: -0.01, y: 0.9, z: 0.07,
+        .to(target, {x: isMobile ? 0 : -0.78, y: isMobile ? 1.5 : -0.03, z: -0.12,
             scrollTrigger: { trigger: ".cam-view-3",  start: "top bottom", end: "top top", scrub: true, immediateRender: false }, onUpdate
         })
         .to(ring.rotation,{x: (ringModel == 1) ? 0 :0.92 , y:(ringModel == 1) ? 0 : 0.92, z: (ringModel == 1) ? -Math.PI /2 : Math.PI/3,
@@ -298,7 +309,87 @@ async function setupViewer(){
         .to('.side-bar .forever', { opacity: 0.5, scale: 1, ease: "power4.inOut", duration: 2, scrollTrigger: { trigger: ".cam-view-3", start: "top bottom", end: 'top top', scrub: 1, immediateRender: false,}})
         .to('.side-bar .emotions', { opacity: 1, scale: 1.5, ease: "power4.inOut", duration: 2, scrollTrigger: { trigger: ".cam-view-3", start: "top bottom", end: 'top top', scrub: 1, immediateRender: false}})
 
+        
+        .to(position, { x: -1.2, y: -0.14, z: 6.15,
+            scrollTrigger: { trigger: ".cam-view-4", start: "top bottom", end: "top top", scrub: true, immediateRender: false }, onUpdate
+        })
+        .to(target, { x: isMobile ? 0 : -0.78, y: isMobile ? 1.5 : -0.03, z: -0.12,
+            scrollTrigger: { trigger: ".cam-view-4", start: "top bottom", end: "top top", scrub: true, immediateRender: false }
+        })
+        .to(ring.rotation, { x: (ringModel == 1) ? 0 : -Math.PI / 3, y: (ringModel == 1) ? 0 : -0.92, z: (ringModel == 1) ? Math.PI / 2 : 0,
+            scrollTrigger: { trigger: ".cam-view-4", start: "top bottom", end: "top top", scrub: true, immediateRender: false }
+        })
+        .fromTo(colorLerpValue, { x: 0 }, { x: 1,
+            scrollTrigger: { trigger: ".cam-view-4", start: "top bottom", end: "top top", scrub: true, immediateRender: false },
+            onUpdate: function () {
+                if (!usingCustomColors) {
+                    silver.material.color.lerpColors(new Color(0xfefefe).convertSRGBToLinear(), new Color(0xd28b8b).convertSRGBToLinear(), colorLerpValue.x);
+                    gold.material.color.lerpColors(new Color(0xe2bf7f).convertSRGBToLinear(), new Color(0xd28b8b).convertSRGBToLinear(), colorLerpValue.x);
+                    for (const o of diamondObjects) {
+                        o.material.color.lerpColors(new Color(0xffffff).convertSRGBToLinear(), new Color(0x39cffe).convertSRGBToLinear(), colorLerpValue.x);
+                    }
+                }
+            }
+        })
+    
+        .to('.emotions--container', { opacity: 0, xPercent: '100', ease: "power4.out", 
+            scrollTrigger: { 
+                trigger: ".cam-view-4", 
+                start: "top bottom", 
+                end: "top top", 
+                scrub: 1, 
+                immediateRender: false 
+            }
+        })
+        .to('.contact-us--text-bg', { opacity: 0.1, ease: "power4.inOut", 
+            scrollTrigger: { 
+                trigger: ".cam-view-4", 
+                start: "top bottom", 
+                end: 'top top', 
+                scrub: 1, 
+                immediateRender: false 
+            }
+        })
+        .fromTo('.contact-us--content', { opacity: 0, x: '-110%' }, { opacity: 1, x: '0%', ease: "power4.inOut", 
+            scrollTrigger: { 
+                trigger: ".cam-view-4", 
+                start: "top bottom", 
+                end: 'top top', 
+                scrub: 1, 
+                immediateRender: false 
+            }
+        })
+        .addLabel("Contact")
+        .to('.side-bar .emotions', { opacity: 0.5, scale: 1, ease: "power4.inOut", duration: 2, 
+            scrollTrigger: { 
+                trigger: ".cam-view-4", 
+                start: "top bottom", 
+                end: 'top top', 
+                scrub: 1, 
+                immediateRender: false 
+            }
+        })
+        .to('.side-bar .contact', { opacity: 1, scale: 1.5, ease: "power4.inOut", duration: 2, 
+            scrollTrigger: { 
+                trigger: ".cam-view-4", 
+                start: "top bottom", 
+                end: 'top top', 
+                scrub: 1, 
+                immediateRender: false 
+            }
+        });
     }
+   
+        
+       
+    
+
+
+    
+
+    
+                    
+    
 
     let needsUpdate = true;
     function onUpdate(){

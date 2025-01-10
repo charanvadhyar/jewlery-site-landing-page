@@ -360,7 +360,7 @@ async function setupViewer(){
             }
         })
         .addLabel("Contact")
-        .to('.side-bar .emotions', { opacity: 0.5, scale: 1, ease: "power4.inOut", duration: 2, 
+        .to('.side-bar .emotions', { opacity: 0.5, scale: 1, ease: "power4.inOut", duration: 3, 
             scrollTrigger: { 
                 trigger: ".cam-view-4", 
                 start: "top bottom", 
@@ -369,7 +369,7 @@ async function setupViewer(){
                 immediateRender: false 
             }
         })
-        .to('.side-bar .contact', { opacity: 1, scale: 1.5, ease: "power4.inOut", duration: 2, 
+        .to('.side-bar .contact', { opacity: 1, scale: 1.5, ease: "power4.inOut", duration: 3, 
             scrollTrigger: { 
                 trigger: ".cam-view-4", 
                 start: "top bottom", 

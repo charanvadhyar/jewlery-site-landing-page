@@ -182,6 +182,7 @@ table {
   display: flex;
   width: 100%;
   justify-content: center;
+
   .header--container {
     display: flex;
     width: 80vw;
@@ -1060,7 +1061,7 @@ table {
         }
       }
     }
-    .contact-u--text-bg {
+    .contact-us--text-bg {
       font-weight: 400;
       font-family: $qwitcher;
       font-size: rem(533);
